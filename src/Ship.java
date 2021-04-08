@@ -8,6 +8,8 @@ public class Ship
 
    public static void spawnShip(int x, int y)
    {
-
+       x1 = x;
+       y1 = y;
+       System.out.printf("Ship X: %d Ship Y: %d", x, y);
    }
 }
