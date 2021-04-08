@@ -3,5 +3,6 @@ public class Client {
         System.out.println("test");
 
         System.out.println("test2");
+        Ship.test();
     }
 }
