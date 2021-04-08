@@ -1,7 +1,13 @@
 public class Ship
 {
-   public static void test()
+    static int health = 0;
+    static int x1 = 0;
+    static int x2 = 0;
+    static int y1 = 0;
+    static int y2 = 0;
+
+   public static void spawnShip(int x, int y)
    {
-       System.out.println("ugh git");
+
    }
 }
