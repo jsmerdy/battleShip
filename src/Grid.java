@@ -5,16 +5,22 @@ public class Grid {
     public int[][] grid;
 
     Grid() {
+        int value = 0;
         grid = new int[size][size];
         for(int i = 0; i < size; i++) {
             for(int j = 0; j < size; j++) {
-                grid[i][j] = 1;
+                grid[i][j] = value;
+                value++;
             }
         }
     }
 
     public void printGrid() {
         System.out.println(Arrays.deepToString(grid));
+    }
+
+    public int getValue(int x, int y) {
+        return grid[x][y];
     }
 
 
