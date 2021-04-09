@@ -21,6 +21,4 @@ public class Grid {
     public int getValue(int x, int y) {
         return grid[x][y];
     }
-
-
 }
