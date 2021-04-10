@@ -1,6 +1,7 @@
 public class Ship
 {
     static int health = 0;
+    static int length = 0;
     static int x1 = 0;
     static int x2 = 0;
     static int y1 = 0;
