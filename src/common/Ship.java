@@ -1,5 +1,6 @@
-public class Ship
-{
+package common;
+
+public class Ship {
     static int health = 0;
     static int length = 0;
     static int x1 = 0;
@@ -7,10 +8,9 @@ public class Ship
     static int y1 = 0;
     static int y2 = 0;
 
-   public static void spawnShip(int x, int y)
-   {
+   public static void spawnShip(int x, int y) {
        x1 = x;
        y1 = y;
-       System.out.printf("Ship X: %d Ship Y: %d", x, y);
+       System.out.printf("common.Ship X: %d common.Ship Y: %d", x, y);
    }
 }

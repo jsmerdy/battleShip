@@ -1,7 +1,9 @@
-public class Submarine extends Ship
-{
-    Submarine()
-    {
+package common;
+
+import common.Ship;
+
+public class Submarine extends Ship {
+    Submarine() {
         Ship.health = 3;
         Ship.length = 3;
         Ship.x1 = 0;

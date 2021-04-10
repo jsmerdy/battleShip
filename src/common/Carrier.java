@@ -1,7 +1,9 @@
-public class Carrier extends Ship
-{
-    Carrier()
-    {
+package common;
+
+import common.Ship;
+
+public class Carrier extends Ship {
+    Carrier() {
         Ship.health = 5;
         Ship.length = 5;
         Ship.x1 = 0;

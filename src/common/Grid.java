@@ -1,10 +1,12 @@
+package common;
+
 import java.util.Arrays;
 
 public class Grid {
     public static int size = 8;
     public int[][] grid;
 
-    Grid() {
+    public Grid() {
         int value = 0;
         grid = new int[size][size];
         for(int i = 0; i < size; i++) {
