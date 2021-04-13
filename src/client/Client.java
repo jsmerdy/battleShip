@@ -43,11 +43,12 @@ public class Client {
             while(true) {
                 String serverMessage = socketReader.readLine();
                 System.out.println("client> received: "+ serverMessage);
-                String parts[] = serverMessage.split(":");
+                String[] parts = serverMessage.split(":");
                 switch(parts[0]) {
                     case "state":
                         if(parts[1].equals("ships")) {
                             System.out.println("Enter ship & spawn location: ");
+                            System.out.println("Ex: ship,x1,y1,x2,y2");
                             String line = bufferedReader.readLine();
                             socketWriter.println("ship_location:" + line);
                             socketWriter.flush();
@@ -67,7 +68,12 @@ public class Client {
                                 ships.add(ship);
                                 break;
                         }
-                        break;
+                    /*case "print_grid":
+                        {
+                            //socketWriter.println(("print_grid:" + parts[1]));
+                            System.out.println(parts[1]);
+                        }
+                        break;*/
                 }
             }
         } catch (IOException e) {

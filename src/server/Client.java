@@ -60,9 +60,17 @@ public class Client implements Runnable
                             case "battleship":
                                 Ship ship = new Battleship(x1,y1,x2,y2);
                                 ships.add(ship);
+                                Server.grid.printGrid();
                                 printWriter.println("ship_confirm:" + String.join(",",coords));
                                 printWriter.flush();
                                 break;
+                            case "print_grid":
+                            {
+                                Server.grid.printGrid();
+                                //String printGrid = Server.grid.printGrid();
+                                //printWriter.println("print_grid:" + printGrid);
+                                break;
+                            }
                         }
                         //todo: track number of ships
                     }
@@ -76,7 +84,6 @@ public class Client implements Runnable
                         //todo: send grid state reply
                     }
                     break;
-
                 }
             } catch (Exception e) {
                 printWriter.println(-1);
