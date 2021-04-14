@@ -76,6 +76,7 @@ public class Client implements Runnable
                         String[] coords = command.parameters;
                         int x = Integer.parseInt(coords[0]);
                         int y = Integer.parseInt(coords[1]);
+                        otherClient().theirGrid.printGrid();
                         int value = otherClient().theirGrid.getValue(x,y);
                         Command shotResult = Commands.create(Commands.shotResult, x, y, value);
                         printWriter.println(shotResult.toString());
