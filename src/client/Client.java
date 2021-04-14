@@ -1,6 +1,7 @@
 package client;
 
 import common.Battleship;
+import common.Commands;
 import common.Grid;
 import common.Ship;
 
@@ -16,6 +17,8 @@ public class Client {
     private static BufferedReader socketReader;
     private static Socket socket;
     ArrayList<common.Ship> ships = new ArrayList<>();
+    public static Grid myGrid = new Grid();
+    public static Grid theirGrid = new Grid();
 
     public static void main(String[] args) {
         try {
@@ -43,18 +46,24 @@ public class Client {
             while(true) {
                 String serverMessage = socketReader.readLine();
                 System.out.println("client> received: "+ serverMessage);
-                String[] parts = serverMessage.split(":");
+                String parts[] = serverMessage.split(":");
                 switch(parts[0]) {
                     case "state":
                         if(parts[1].equals("ships")) {
                             System.out.println("Enter ship & spawn location: ");
-                            System.out.println("Ex: ship,x1,y1,x2,y2");
                             String line = bufferedReader.readLine();
                             socketWriter.println("ship_location:" + line);
                             socketWriter.flush();
                         }
+                        if(parts[1].equals("shots"))
+                        {
+                            System.out.println("Enter shot location: ");
+                            String line = bufferedReader.readLine();
+                            socketWriter.println("shot:" + line);
+                            socketWriter.flush();
+                        }
                         break;
-                    case "ship_confirm":
+                    case Commands.shipConfirm:
                         String[] coords = parts[1].split(",");
                         String shipName = coords[0];
                         int x1 = Integer.parseInt(coords[1]);
@@ -66,14 +75,12 @@ public class Client {
                             case "battleship":
                                 Ship ship = new Battleship(x1,y1,x2,y2);
                                 ships.add(ship);
+                                myGrid.addShip(ship);
+                                myGrid.printGrid();
                                 break;
                         }
-                    /*case "print_grid":
-                        {
-                            //socketWriter.println(("print_grid:" + parts[1]));
-                            System.out.println(parts[1]);
-                        }
-                        break;*/
+                        break;
+                        //todo: process shot result
                 }
             }
         } catch (IOException e) {

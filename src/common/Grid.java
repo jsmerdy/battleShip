@@ -23,4 +23,18 @@ public class Grid {
     public int getValue(int x, int y) {
         return grid[x][y];
     }
+
+    public void setValue(int x, int y, int value) {
+        grid[x][y] = value;
+    }
+    public void addShip(Ship ship)
+    {
+        for(int x = ship.x1; x <= ship.x2; x++)
+        {
+            for (int y = ship.y1; y <= ship.y2; y++)
+            {
+                grid[x][y] = 1;
+            }
+        }
+    }
 }

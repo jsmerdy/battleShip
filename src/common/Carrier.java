@@ -4,11 +4,11 @@ import common.Ship;
 
 public class Carrier extends Ship {
     Carrier() {
-        Ship.health = 5;
-        Ship.length = 5;
-        Ship.x1 = 0;
-        Ship.x2 = 0;
-        Ship.y1 = 0;
-        Ship.y2 = 0;
+        this.health = 5;
+        this.length = 5;
+        this.x1 = 0;
+        this.x2 = 0;
+        this.y1 = 0;
+        this.y2 = 0;
     }
 }

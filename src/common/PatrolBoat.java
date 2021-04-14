@@ -6,11 +6,11 @@ public class PatrolBoat extends Ship
 {
     PatrolBoat()
     {
-        Ship.health = 2;
-        Ship.length = 2;
-        Ship.x1 = 0;
-        Ship.x2 = 0;
-        Ship.y1 = 0;
-        Ship.y2 = 0;
+        this.health = 2;
+        this.length = 2;
+        this.x1 = 0;
+        this.x2 = 0;
+        this.y1 = 0;
+        this.y2 = 0;
     }
 }

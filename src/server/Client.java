@@ -1,15 +1,12 @@
 package server;
 
-import common.Battleship;
-import common.Ship;
+import common.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.StringJoiner;
 
 public class Client implements Runnable
 {
@@ -17,11 +14,14 @@ public class Client implements Runnable
     BufferedReader bufferedReader;
     PrintWriter printWriter;
     public Socket socket;
+    public static Grid myGrid = new Grid();
+    public static Grid theirGrid = new Grid();
 
     enum States
     {
         ships,
-        shots
+        shots,
+        result,
     }
 
     public States clientState;
@@ -35,21 +35,19 @@ public class Client implements Runnable
         while(true) {
             try {
                 //todo: switch on client state
-                printWriter.println("state:ships");
-                printWriter.flush();
+                sendPrompt();
                 line = bufferedReader.readLine();
                 if(line == null)
                 {
                     break;
                 }
                 System.out.println("server> received: " + line);
-                line = line.trim();
-                String[] inputArray = line.split(":");
-                switch(inputArray[0])
+                Command command = Commands.parse(line);
+                switch(command.operation)
                 {
-                    case "ship_location":
+                    case Commands.shipLocation:
                     {
-                        String[] coords = inputArray[1].split(",");
+                        String[] coords = command.parameters;
                         String shipName = coords[0];
                         int x1 = Integer.parseInt(coords[1]);
                         int y1 = Integer.parseInt(coords[2]);
@@ -60,30 +58,31 @@ public class Client implements Runnable
                             case "battleship":
                                 Ship ship = new Battleship(x1,y1,x2,y2);
                                 ships.add(ship);
-                                Server.grid.printGrid();
-                                printWriter.println("ship_confirm:" + String.join(",",coords));
+                                if (ships.size() > 0)
+                                {
+                                    clientState = States.shots;
+                                }
+                                Command shipConfirm = Commands.create(Commands.shipConfirm, coords);
+                                myGrid.addShip(ship);
+                                myGrid.printGrid();
+                                printWriter.println(shipConfirm.toString());
                                 printWriter.flush();
                                 break;
-                            case "print_grid":
-                            {
-                                Server.grid.printGrid();
-                                //String printGrid = Server.grid.printGrid();
-                                //printWriter.println("print_grid:" + printGrid);
-                                break;
-                            }
                         }
-                        //todo: track number of ships
                     }
                     break;
-                    case "shot":
+                    case Commands.shot:
                     {
-                        String[] coords = inputArray[1].split(",");
+                        String[] coords = command.parameters;
                         int x = Integer.parseInt(coords[0]);
                         int y = Integer.parseInt(coords[1]);
-                        int value = Server.grid.getValue(x,y);
-                        //todo: send grid state reply
+                        int value = otherClient().theirGrid.getValue(x,y);
+                        Command shotResult = Commands.create(Commands.shotResult, x, y, value);
+                        printWriter.println(shotResult.toString());
+                        printWriter.flush();
                     }
                     break;
+
                 }
             } catch (Exception e) {
                 printWriter.println(-1);
@@ -96,6 +95,32 @@ public class Client implements Runnable
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void sendPrompt() {
+        String prompt = Commands.state;
+        switch(clientState)
+        {
+            case ships:
+                prompt += ":ships";
+                break;
+            case shots:
+                prompt += ":shots";
+                break;
+        }
+        printWriter.println(prompt);
+        printWriter.flush();
+    }
+
+    private Client otherClient() {
+        if (this == Server.playerA)
+        {
+            return Server.playerB;
+        }
+        else
+        {
+            return Server.playerA;
         }
     }
 }
