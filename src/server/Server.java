@@ -14,9 +14,7 @@ import java.util.ArrayList;
 public class Server {
     static server.Client playerA;
     static server.Client playerB;
-    public static Grid grid;
     public static void main(String[] args) {
-        grid = new Grid();
         try {
             ServerSocket serverSocket = new ServerSocket(5000);
             while(true) {

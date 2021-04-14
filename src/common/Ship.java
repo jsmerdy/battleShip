@@ -1,16 +1,11 @@
 package common;
 
 public class Ship {
-    static int health = 0;
-    static int length = 0;
-    static int x1 = 0;
-    static int x2 = 0;
-    static int y1 = 0;
-    static int y2 = 0;
+    public int health = 0;
+    public int length = 0;
+    public int x1 = 0;
+    public int x2 = 0;
+    public int y1 = 0;
+    public int y2 = 0;
 
-   public static void spawnShip(int x, int y) {
-       x1 = x;
-       y1 = y;
-       System.out.printf("common.Ship X: %d common.Ship Y: %d", x, y);
-   }
 }
