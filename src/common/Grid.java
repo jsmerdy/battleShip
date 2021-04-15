@@ -17,7 +17,12 @@ public class Grid {
     }
 
     public void printGrid() {
-        System.out.println(Arrays.deepToString(grid));
+        for(int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++) {
+                System.out.print(grid[i][j] + " ");
+            }
+            System.out.println();
+        }
     }
 
     public int getValue(int x, int y) {
