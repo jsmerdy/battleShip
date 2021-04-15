@@ -36,5 +36,6 @@ public class Grid {
                 grid[x][y] = 1;
             }
         }
+        //todo: make sure no ship already exist
     }
 }

@@ -13,4 +13,10 @@ public class Battleship extends Ship {
         this.x2 = x2;
         this.y2 = y2;
     }
+    public Battleship()
+    {
+        super();
+        this.health = 4;
+        this.length = 4;
+    }
 }
