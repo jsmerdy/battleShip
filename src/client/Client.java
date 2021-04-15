@@ -132,7 +132,7 @@ public class Client {
             while(true) {
                 String serverMessage = socketReader.readLine();
                 System.out.println("client> received: "+ serverMessage);
-                String parts[] = serverMessage.split(":");
+                String[] parts = serverMessage.split(":");
                 switch(parts[0]) {
                     case "state":
                         if(parts[1].equals("ships")) {
@@ -162,6 +162,7 @@ public class Client {
                         int y2 = Integer.parseInt(coords[4]);
                         switch(shipName)
                         {
+                            //todo: fix this shit
                             case "battleship":
                                 Ship ship = new Battleship(x1,y1,x2,y2);
                                 ships.add(ship);

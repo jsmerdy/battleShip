@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class Client implements Runnable
 {
-    ArrayList<Ship> ships = new ArrayList<>();
+    ArrayList<Ship>  ships = new ArrayList<>();
     BufferedReader bufferedReader;
     PrintWriter printWriter;
     public Socket socket;
