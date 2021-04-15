@@ -3,7 +3,7 @@ package common;
 import common.Ship;
 
 public class Submarine extends Ship {
-    Submarine() {
+    public Submarine() {
         this.health = 3;
         this.length = 3;
         this.x1 = 0;

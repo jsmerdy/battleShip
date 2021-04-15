@@ -14,8 +14,10 @@ public class Client implements Runnable
     BufferedReader bufferedReader;
     PrintWriter printWriter;
     public Socket socket;
-    public static Grid myGrid = new Grid();
-    public static Grid theirGrid = new Grid();
+    public Grid shipGrid = new Grid();
+    public Grid shotGrid = new Grid();
+
+    public static final String battleshipName = "Battleship";
 
     enum States
     {
@@ -55,7 +57,7 @@ public class Client implements Runnable
                         int y2 = Integer.parseInt(coords[4]);
                         switch(shipName)
                         {
-                            case "battleship":
+                            case battleshipName:
                                 Ship ship = new Battleship(x1,y1,x2,y2);
                                 ships.add(ship);
                                 if (ships.size() > 0)
@@ -63,8 +65,8 @@ public class Client implements Runnable
                                     clientState = States.shots;
                                 }
                                 Command shipConfirm = Commands.create(Commands.shipConfirm, coords);
-                                myGrid.addShip(ship);
-                                myGrid.printGrid();
+                                shipGrid.addShip(ship);
+                                shipGrid.printGrid();
                                 printWriter.println(shipConfirm.toString());
                                 printWriter.flush();
                                 break;
@@ -76,8 +78,8 @@ public class Client implements Runnable
                         String[] coords = command.parameters;
                         int x = Integer.parseInt(coords[0]);
                         int y = Integer.parseInt(coords[1]);
-                        otherClient().theirGrid.printGrid();
-                        int value = otherClient().theirGrid.getValue(x,y);
+                        otherClient().shipGrid.printGrid();
+                        int value = otherClient().shipGrid.getValue(x,y);
                         Command shotResult = Commands.create(Commands.shotResult, x, y, value);
                         printWriter.println(shotResult.toString());
                         printWriter.flush();

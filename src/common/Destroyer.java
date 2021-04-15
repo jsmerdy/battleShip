@@ -4,7 +4,7 @@ import common.Ship;
 
 public class Destroyer extends Ship
 {
-    Destroyer()
+    public Destroyer()
     {
         this.health = 3;
         this.length = 3;

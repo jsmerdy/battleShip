@@ -3,7 +3,7 @@ package common;
 import common.Ship;
 
 public class Carrier extends Ship {
-    Carrier() {
+    public Carrier() {
         this.health = 5;
         this.length = 5;
         this.x1 = 0;
