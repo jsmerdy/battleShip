@@ -18,6 +18,7 @@ public class Client implements Runnable
     public Grid shotGrid = new Grid();
 
     public static final String battleshipName = "Battleship";
+    public static final String patrolBoatName = "PatrolBoat";
 
     enum States
     {
@@ -58,18 +59,33 @@ public class Client implements Runnable
                         switch(shipName)
                         {
                             case battleshipName:
-                                Ship ship = new Battleship(x1,y1,x2,y2);
-                                ships.add(ship);
-                                if (ships.size() > 0)
+                                Ship battleship = new Battleship(x1,y1,x2,y2);
+                                ships.add(battleship);
+                                if (ships.size() > 1)
                                 {
                                     clientState = States.shots;
                                 }
                                 Command shipConfirm = Commands.create(Commands.shipConfirm, coords);
-                                shipGrid.addShip(ship);
+                                shipGrid.addShip(battleship);
                                 shipGrid.printGrid();
                                 printWriter.println(shipConfirm.toString());
                                 printWriter.flush();
                                 break;
+
+                            case patrolBoatName:
+                                Ship patrolBoat = new PatrolBoat(x1,y1,x2,y2);
+                                ships.add(patrolBoat);
+                                if (ships.size() > 1)
+                                {
+                                    clientState = States.shots;
+                                }
+                                shipConfirm = Commands.create(Commands.shipConfirm, coords);
+                                shipGrid.addShip(patrolBoat);
+                                shipGrid.printGrid();
+                                printWriter.println(shipConfirm.toString());
+                                printWriter.flush();
+                                break;
+
                         }
                     }
                     break;
