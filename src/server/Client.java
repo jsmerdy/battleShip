@@ -8,8 +8,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Client implements Runnable
-{
+public class Client implements Runnable {
     ArrayList<Ship> ships = new ArrayList<>();
     BufferedReader bufferedReader;
     PrintWriter printWriter;
@@ -20,8 +19,7 @@ public class Client implements Runnable
     public static final String battleshipName = "Battleship";
     public static final String patrolBoatName = "PatrolBoat";
 
-    enum States
-    {
+    enum States {
         ships,
         shots,
         result,
@@ -40,29 +38,23 @@ public class Client implements Runnable
                 //todo: switch on client state
                 sendPrompt();
                 line = bufferedReader.readLine();
-                if(line == null)
-                {
-                    break;
-                }
+                if(line == null) { break; }
+
                 System.out.println("server> received: " + line);
                 Command command = Commands.parse(line);
-                switch(command.operation)
-                {
-                    case Commands.shipLocation:
-                    {
+                switch(command.operation) {
+                    case Commands.shipLocation: {
                         String[] coords = command.parameters;
                         String shipName = coords[0];
                         int x1 = Integer.parseInt(coords[1]);
                         int y1 = Integer.parseInt(coords[2]);
                         int x2 = Integer.parseInt(coords[3]);
                         int y2 = Integer.parseInt(coords[4]);
-                        switch(shipName)
-                        {
+                        switch(shipName) {
                             case battleshipName:
                                 Ship battleship = new Battleship(x1,y1,x2,y2);
                                 ships.add(battleship);
-                                if (ships.size() > 1)
-                                {
+                                if (ships.size() > 1) {
                                     clientState = States.shots;
                                 }
                                 Command shipConfirm = Commands.create(Commands.shipConfirm, coords);
@@ -75,8 +67,7 @@ public class Client implements Runnable
                             case patrolBoatName:
                                 Ship patrolBoat = new PatrolBoat(x1,y1,x2,y2);
                                 ships.add(patrolBoat);
-                                if (ships.size() > 1)
-                                {
+                                if (ships.size() > 1) {
                                     clientState = States.shots;
                                 }
                                 shipConfirm = Commands.create(Commands.shipConfirm, coords);
@@ -89,8 +80,8 @@ public class Client implements Runnable
                         }
                     }
                     break;
-                    case Commands.shot:
-                    {
+
+                    case Commands.shot: {
                         String[] coords = command.parameters;
                         int x = Integer.parseInt(coords[0]);
                         int y = Integer.parseInt(coords[1]);
@@ -119,8 +110,7 @@ public class Client implements Runnable
 
     public void sendPrompt() {
         String prompt = Commands.state;
-        switch(clientState)
-        {
+        switch(clientState) {
             case ships:
                 prompt += ":ships";
                 break;
@@ -133,12 +123,10 @@ public class Client implements Runnable
     }
 
     private Client otherClient() {
-        if (this == Server.playerA)
-        {
+        if (this == Server.playerA) {
             return Server.playerB;
         }
-        else
-        {
+        else {
             return Server.playerA;
         }
     }

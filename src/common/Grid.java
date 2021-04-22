@@ -32,6 +32,7 @@ public class Grid {
     public void setValue(int x, int y, int value) {
         grid[x][y] = value;
     }
+
     public void addShip(Ship ship)
     {
         for(int x = ship.x1; x <= ship.x2; x++)
