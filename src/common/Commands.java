@@ -11,8 +11,7 @@ public class Commands
     public static final String shotResult = "shot_result";
     public static final String state = "state";
 
-    public static Command parse(String line)
-    {
+    public static Command parse(String line) {
         line = line.trim();
         String[] inputArray = line.split(":");
         Command command = new Command();
