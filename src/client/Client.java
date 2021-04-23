@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 
 public class Client {
     private PrintWriter socketWriter;
@@ -18,6 +19,7 @@ public class Client {
     public Grid shipGrid = new Grid();
     public Grid shotGrid = new Grid();
     public LinkedList<Ship> shipList;
+    private Random randomGenerator = new Random();
 
     public static void main(String[] args) {
 
@@ -55,11 +57,11 @@ public class Client {
 
     private void placeShipRandomly(Ship ship, Grid testGrid) {
         while(true) {
-            int x1 = (int) (Math.random() * Grid.size);
-            int y1 = (int) (Math.random() * Grid.size);
+            int x1 = (int) (randomGenerator.nextInt(Grid.size));
+            int y1 = (int) (randomGenerator.nextInt(Grid.size));
             int x2 = 0;
             int y2 = 0;
-            int direction = (int) (Math.random() * 4);
+            int direction = (int) (randomGenerator.nextInt(4));
 
             switch(direction) {
                 case 0:
@@ -100,10 +102,7 @@ public class Client {
             if(!clear) {
                 continue;
             }
-            ship.x1 = x1;
-            ship.x2 = x2;
-            ship.y1 = y1;
-            ship.y2 = y2;
+            ship.init(x1,y1,x2,y2);
             testGrid.addShip(ship);
             break;
         }
@@ -159,7 +158,7 @@ public class Client {
                         int y2 = Integer.parseInt(coords[4]);
                         switch(shipName) {
                             case "battleship":
-                                Ship battleShip = new Battleship(x1,y1,x2,y2);
+                                Ship battleShip = new Battleship().init(x1,y1,x2,y2);
                                 ships.add(battleShip);
                                 shipGrid.addShip(battleShip);
                                 shipGrid.printGrid();

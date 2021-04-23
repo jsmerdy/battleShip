@@ -9,28 +9,28 @@ public class Grid {
     public Grid() {
         int value = 0;
         grid = new int[size][size];
-        for(int i = 0; i < size; i++) {
-            for(int j = 0; j < size; j++) {
-                grid[i][j] = value;
+        for(int y = 0; y < size; y++) {
+            for(int x = 0; x < size; x++) {
+                grid[y][x] = value;
             }
         }
     }
 
     public void printGrid() {
-        for(int i = 0; i < size; i++) {
-            for(int j = 0; j < size; j++) {
-                System.out.print(grid[i][j] + " ");
+        for(int y = 0; y < size; y++) {
+            for(int x = 0; x < size; x++) {
+                System.out.print(grid[y][x] + " ");
             }
             System.out.println();
         }
     }
 
     public int getValue(int x, int y) {
-        return grid[x][y];
+        return grid[y][x];
     }
 
     public void setValue(int x, int y, int value) {
-        grid[x][y] = value;
+        grid[y][x] = value;
     }
 
 
@@ -40,12 +40,13 @@ public class Grid {
     //Possible fix is detect which way the placement loop needs to run
     public void addShip(Ship ship)
     {
-            for(int x = ship.x1; x <= ship.x2; x++) {
-                for (int y = ship.y1; y <= ship.y2; y++)
-                {
-                    grid[x][y] = 1;
-                }
+        for (int y = ship.y1; y <= ship.y2; y++)
+        {
+            for(int x = ship.x1; x <= ship.x2; x++ )
+            {
+                grid[y][x] = 1;
             }
+        }
 
         //todo: make sure no ship already exist
     }

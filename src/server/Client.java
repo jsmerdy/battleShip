@@ -52,7 +52,7 @@ public class Client implements Runnable {
                         int y2 = Integer.parseInt(coords[4]);
                         switch(shipName) {
                             case battleshipName:
-                                Ship battleship = new Battleship(x1,y1,x2,y2);
+                                Ship battleship = new Battleship().init(x1,y1,x2,y2);
                                 ships.add(battleship);
                                 if (ships.size() > 1) {
                                     clientState = States.shots;
@@ -65,7 +65,7 @@ public class Client implements Runnable {
                                 break;
 
                             case patrolBoatName:
-                                Ship patrolBoat = new PatrolBoat(x1,y1,x2,y2);
+                                Ship patrolBoat = new PatrolBoat().init(x1,y1,x2,y2);
                                 ships.add(patrolBoat);
                                 if (ships.size() > 1) {
                                     clientState = States.shots;
