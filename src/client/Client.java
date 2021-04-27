@@ -11,13 +11,17 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
+import static server.Client.*;
+
 public class Client {
+    private final ShipView shipView;
+    private final ShotView shotView;
     private PrintWriter socketWriter;
     private BufferedReader socketReader;
     private Socket socket;
     ArrayList<common.Ship> ships = new ArrayList<>();
     public Grid shipGrid = new Grid();
-    public Grid shotGrid = new Grid();
+    public Grid shotGrid = new Grid(-1);
     public LinkedList<Ship> shipList;
     private Random randomGenerator = new Random();
 
@@ -28,6 +32,14 @@ public class Client {
 
         System.out.println("Client closing");
         return;
+    }
+
+    public Client()
+    {
+        shipGrid = new Grid();
+        shotGrid = new Grid(-1);
+        shipView = new ShipView(shipGrid);
+        shotView = new ShotView(shotGrid);
     }
 
     private void generateShipList() {
@@ -65,20 +77,20 @@ public class Client {
 
             switch(direction) {
                 case 0:
-                    x2 = x1 + ship.length;
+                    x2 = x1 + ship.length - 1;
                     y2 = y1;
                     break;
                 case 1:
-                    x2 = x1 - ship.length;
+                    x2 = x1 - ship.length + 1;
                     y2 = y1;
                     break;
                 case 2:
                     x2 = x1;
-                    y2 = y1 + ship.length;
+                    y2 = y1 + ship.length - 1;
                     break;
                 case 3:
                     x2 = x1;
-                    y2 = y1 - ship.length;
+                    y2 = y1 - ship.length + 1;
                     break;
             }
 
@@ -89,9 +101,11 @@ public class Client {
                 continue;
             }
 
+            ship.init(x1,y1,x2,y2);
+
             boolean clear = true;
-            for(int x = x1; x <= x2; x++) {
-                for (int y = y1; y <= y2; y++) {
+            for (int y = ship.y1; y <= ship.y2; y++) {
+                for(int x = ship.x1; x <= ship.x2; x++) {
                     if(testGrid.getValue(x,y) == 1) {
                         clear = false;
                         break;
@@ -102,7 +116,7 @@ public class Client {
             if(!clear) {
                 continue;
             }
-            ship.init(x1,y1,x2,y2);
+
             testGrid.addShip(ship);
             break;
         }
@@ -128,10 +142,10 @@ public class Client {
             while(true) {
                 String serverMessage = socketReader.readLine();
                 System.out.println("client> received: "+ serverMessage);
-                String[] recivedMessage = serverMessage.split(":");
-                switch(recivedMessage[0]) {
+                Command command = Commands.parse(serverMessage);
+                switch(command.operation) {
                     case "state":
-                        if(recivedMessage[1].equals("ships")) {
+                        if(command.parameters[0].equals("ships")) {
                             /*
                             System.out.println("Enter ship & spawn location: ");
                             String line = bufferedReader.readLine();
@@ -141,7 +155,7 @@ public class Client {
                             socketWriter.println("ship_location:" + shipLocation);
                             socketWriter.flush();
                         }
-                        if(recivedMessage[1].equals("shots")) {
+                        if(command.parameters[0].equals("shots")) {
                             System.out.println("Enter shot location: ");
                             String shotLocation = bufferedReader.readLine();
                             socketWriter.println("shot:" + shotLocation);
@@ -150,24 +164,48 @@ public class Client {
                         break;
 
                     case Commands.shipConfirm:
-                        String[] coords = recivedMessage[1].split(",");
+                        String[] coords = command.parameters;
                         String shipName = coords[0];
                         int x1 = Integer.parseInt(coords[1]);
                         int y1 = Integer.parseInt(coords[2]);
                         int x2 = Integer.parseInt(coords[3]);
                         int y2 = Integer.parseInt(coords[4]);
+                        Ship ship = null;
                         switch(shipName) {
-                            case "battleship":
-                                Ship battleShip = new Battleship().init(x1,y1,x2,y2);
-                                ships.add(battleShip);
-                                shipGrid.addShip(battleShip);
-                                shipGrid.printGrid();
+                            case battleshipName:
+                                ship = new Battleship().init(x1,y1,x2,y2);
+                                break;
+                            case patrolBoatName:
+                                ship = new PatrolBoat().init(x1,y1,x2,y2);
+                                break;
+                            case submarineName:
+                                ship = new Submarine().init(x1,y1,x2,y2);
+                                break;
+                            case carrierName:
+                                ship = new Carrier().init(x1,y1,x2,y2);
+                                break;
+                            case destroyerName:
+                                ship = new Destroyer().init(x1,y1,x2,y2);
                                 break;
                         }
+                        if (ship != null) {
+                            ships.add(ship);
+                            shipGrid.addShip(ship);
+                            shipView.draw();
+                        }
+                        break;
+                    case Commands.shotResult:
+                        String[] shotCoords = command.parameters;
+                        int x = Integer.parseInt(shotCoords[0]);
+                        int y = Integer.parseInt(shotCoords[1]);
+                        int v = Integer.parseInt(shotCoords[2]);
+                        shotGrid.setValue(x,y,v);
+                        shotGrid.printGrid();
                         break;
                         //todo: process shot result
                 }
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

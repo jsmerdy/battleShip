@@ -5,12 +5,13 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class View {
+    protected Grid modelGrid = null;
     JFrame frame = new JFrame();
     JPanel buttonPanel = new JPanel();
     JPanel containerPanel = new JPanel();
     ArrayList<JButton> buttonGrid = new ArrayList<>();
-
-    View() {
+    View()
+    {
         frame.setSize(400,400);
         buttonPanel.setLayout(new GridLayout(8,8));
 
@@ -25,6 +26,17 @@ public class View {
         frame.add(containerPanel);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    protected void draw()
+    {
+
+    }
+
+
+    View(Grid grid) {
+        this();
+        modelGrid = grid;
     }
 
     public static void main(String[] args) {

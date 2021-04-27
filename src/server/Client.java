@@ -14,10 +14,13 @@ public class Client implements Runnable {
     PrintWriter printWriter;
     public Socket socket;
     public Grid shipGrid = new Grid();
-    public Grid shotGrid = new Grid();
+    public Grid shotGrid = new Grid(-1);
 
     public static final String battleshipName = "Battleship";
     public static final String patrolBoatName = "PatrolBoat";
+    public static final String carrierName = "Carrier";
+    public static final String destroyerName = "Destroyer";
+    public static final String submarineName = "Submarine";
 
     enum States {
         ships,
@@ -54,7 +57,7 @@ public class Client implements Runnable {
                             case battleshipName:
                                 Ship battleship = new Battleship().init(x1,y1,x2,y2);
                                 ships.add(battleship);
-                                if (ships.size() > 1) {
+                                if (ships.size() > 5) {
                                     clientState = States.shots;
                                 }
                                 Command shipConfirm = Commands.create(Commands.shipConfirm, coords);
@@ -67,11 +70,48 @@ public class Client implements Runnable {
                             case patrolBoatName:
                                 Ship patrolBoat = new PatrolBoat().init(x1,y1,x2,y2);
                                 ships.add(patrolBoat);
-                                if (ships.size() > 1) {
+                                if (ships.size() == 5) {
                                     clientState = States.shots;
                                 }
                                 shipConfirm = Commands.create(Commands.shipConfirm, coords);
                                 shipGrid.addShip(patrolBoat);
+                                shipGrid.printGrid();
+                                printWriter.println(shipConfirm.toString());
+                                printWriter.flush();
+                                break;
+
+                            case carrierName:
+                                Ship carrier = new Carrier().init(x1,y1,x2,y2);
+                                ships.add(carrier);
+                                if (ships.size() == 5) {
+                                    clientState = States.shots;
+                                }
+                                shipConfirm = Commands.create(Commands.shipConfirm, coords);
+                                shipGrid.addShip(carrier);
+                                shipGrid.printGrid();
+                                printWriter.println(shipConfirm.toString());
+                                printWriter.flush();
+                                break;
+                            case submarineName:
+                                Ship submarine = new Submarine().init(x1,y1,x2,y2);
+                                ships.add(submarine);
+                                if (ships.size() == 5) {
+                                    clientState = States.shots;
+                                }
+                                shipConfirm = Commands.create(Commands.shipConfirm, coords);
+                                shipGrid.addShip(submarine);
+                                shipGrid.printGrid();
+                                printWriter.println(shipConfirm.toString());
+                                printWriter.flush();
+                                break;
+                            case destroyerName:
+                                Ship destroyer = new Destroyer().init(x1,y1,x2,y2);
+                                ships.add(destroyer);
+                                if (ships.size() == 5) {
+                                    clientState = States.shots;
+                                }
+                                shipConfirm = Commands.create(Commands.shipConfirm, coords);
+                                shipGrid.addShip(destroyer);
                                 shipGrid.printGrid();
                                 printWriter.println(shipConfirm.toString());
                                 printWriter.flush();
