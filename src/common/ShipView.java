@@ -1,5 +1,7 @@
 package common;
 
+import MVC.View;
+
 import java.awt.*;
 
 public class ShipView extends View
@@ -18,10 +20,12 @@ public class ShipView extends View
                 if(modelGrid.getValue(x,y) == 1)
                 {
                     buttonGrid.get(y*modelGrid.size + x).setBackground(Color.GRAY);
+                    buttonGrid.get(y*modelGrid.size + x).setOpaque(true);
                 }
                 else
                 {
                     buttonGrid.get(y*modelGrid.size + x).setBackground(Color.WHITE);
+                    buttonGrid.get(y*modelGrid.size + x).setOpaque(true);
                 }
 
             }

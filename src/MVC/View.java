@@ -1,7 +1,10 @@
-package common;
+package MVC;
+
+import common.Grid;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class View {
@@ -9,7 +12,7 @@ public class View {
     JFrame frame = new JFrame();
     JPanel buttonPanel = new JPanel();
     JPanel containerPanel = new JPanel();
-    ArrayList<JButton> buttonGrid = new ArrayList<>();
+    public ArrayList<JButton> buttonGrid = new ArrayList<>();
     View()
     {
         frame.setSize(400,400);
@@ -33,13 +36,16 @@ public class View {
 
     }
 
-
-    View(Grid grid) {
+    public View(Grid grid) {
         this();
         modelGrid = grid;
     }
 
+
+
     public static void main(String[] args) {
         new View();
     }
+
+
 }
