@@ -1,5 +1,6 @@
 package client;
 
+import MVC.Controller;
 import common.*;
 
 import java.io.BufferedReader;
@@ -23,7 +24,7 @@ public class Client {
     public Grid shipGrid = new Grid();
     public Grid shotGrid = new Grid(-1);
     public LinkedList<Ship> shipList;
-    private Random randomGenerator = new Random();
+    private final Random randomGenerator = new Random();
 
     public static void main(String[] args) {
 
@@ -40,6 +41,7 @@ public class Client {
         shotGrid = new Grid(-1);
         shipView = new ShipView(shipGrid);
         shotView = new ShotView(shotGrid);
+        Controller shotController = new Controller(shotGrid);
     }
 
     private void generateShipList() {
@@ -69,11 +71,11 @@ public class Client {
 
     private void placeShipRandomly(Ship ship, Grid testGrid) {
         while(true) {
-            int x1 = (int) (randomGenerator.nextInt(Grid.size));
-            int y1 = (int) (randomGenerator.nextInt(Grid.size));
+            int x1 = randomGenerator.nextInt(Grid.size);
+            int y1 = randomGenerator.nextInt(Grid.size);
             int x2 = 0;
             int y2 = 0;
-            int direction = (int) (randomGenerator.nextInt(4));
+            int direction = randomGenerator.nextInt(4);
 
             switch(direction) {
                 case 0:

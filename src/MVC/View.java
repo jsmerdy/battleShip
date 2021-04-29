@@ -19,7 +19,9 @@ public class View {
         buttonPanel.setLayout(new GridLayout(8,8));
 
         for (int i = 0; i < 64; i++) {
-            buttonGrid.add(new JButton(String.valueOf(i)));
+            JButton button = new JButton();
+            button.putClientProperty("grid_location" , i);
+            buttonGrid.add(button);
             buttonPanel.add(buttonGrid.get(i));
         }
 

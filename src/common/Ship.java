@@ -30,15 +30,15 @@ public class Ship {
     {
         if (x2 < x1)
         {
-            int h = x1;
+            int swp = x1;
             x1 = x2;
-            x2 = h;
+            x2 = swp;
         }
         if (y2 < y1)
         {
-            int h = y1;
+            int swp = y1;
             y1 = y2;
-            y2 = h;
+            y2 = swp;
         }
 
     }
