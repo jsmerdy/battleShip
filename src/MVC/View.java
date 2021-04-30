@@ -8,14 +8,12 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class View {
-    protected Grid modelGrid = null;
-    JFrame frame = new JFrame();
     JPanel buttonPanel = new JPanel();
-    JPanel containerPanel = new JPanel();
+    public JPanel containerPanel = new JPanel();
     public ArrayList<JButton> buttonGrid = new ArrayList<>();
-    View()
+    public View()
     {
-        frame.setSize(400,400);
+        //frame.setSize(400,400);
         buttonPanel.setLayout(new GridLayout(8,8));
 
         for (int i = 0; i < 64; i++) {
@@ -28,20 +26,9 @@ public class View {
         buttonPanel.setPreferredSize(new Dimension(400,400));
         containerPanel.add(buttonPanel);
 
-        frame.add(containerPanel);
-        frame.pack();
-        frame.setVisible(true);
     }
 
-    protected void draw()
-    {
 
-    }
-
-    public View(Grid grid) {
-        this();
-        modelGrid = grid;
-    }
 
 
 

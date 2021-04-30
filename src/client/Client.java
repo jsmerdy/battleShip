@@ -1,8 +1,13 @@
 package client;
 
 import MVC.Controller;
+import MVC.ShipController;
+import MVC.ShotController;
+import MVC.View;
 import common.*;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,16 +20,14 @@ import java.util.Random;
 import static server.Client.*;
 
 public class Client {
-    private final ShipView shipView;
-    private final ShotView shotView;
     private PrintWriter socketWriter;
     private BufferedReader socketReader;
     private Socket socket;
     ArrayList<common.Ship> ships = new ArrayList<>();
-    public Grid shipGrid = new Grid();
-    public Grid shotGrid = new Grid(-1);
     public LinkedList<Ship> shipList;
     private final Random randomGenerator = new Random();
+    private ShotController shotController;
+    private ShipController shipController;
 
     public static void main(String[] args) {
 
@@ -37,11 +40,7 @@ public class Client {
 
     public Client()
     {
-        shipGrid = new Grid();
-        shotGrid = new Grid(-1);
-        shipView = new ShipView(shipGrid);
-        shotView = new ShotView(shotGrid);
-        Controller shotController = new Controller(shotGrid);
+
     }
 
     private void generateShipList() {
@@ -138,6 +137,23 @@ public class Client {
             e.printStackTrace();
         }
 
+        Grid shipGrid = new Grid();
+        Grid shotGrid = new Grid(-1);
+        View shipView = new ShipView();
+        View shotView = new ShotView();
+        JFrame containerFrame = new JFrame();
+        containerFrame.setSize(400,800);
+        containerFrame.setLayout(new GridLayout(2,1));
+        containerFrame.add(shipView.containerPanel);
+        containerFrame.add(shotView.containerPanel);
+        containerFrame.pack();
+        containerFrame.setVisible(true);
+
+        shotController = new ShotController(shotGrid, shotView, socketWriter);
+        shipController = new ShipController(shipGrid,shipView);
+        shotController.draw();
+
+
         BufferedReader bufferedReader = new BufferedReader((new InputStreamReader(System.in)));
 
         try {
@@ -158,10 +174,10 @@ public class Client {
                             socketWriter.flush();
                         }
                         if(command.parameters[0].equals("shots")) {
-                            System.out.println("Enter shot location: ");
-                            String shotLocation = bufferedReader.readLine();
-                            socketWriter.println("shot:" + shotLocation);
-                            socketWriter.flush();
+                            /*
+                            //todo: let user know it's his/her/their turn
+
+                            */
                         }
                         break;
 
@@ -192,8 +208,8 @@ public class Client {
                         }
                         if (ship != null) {
                             ships.add(ship);
-                            shipGrid.addShip(ship);
-                            shipView.draw();
+                            shipController.addShip(ship);
+                            shipController.draw();
                         }
                         break;
                     case Commands.shotResult:
@@ -201,8 +217,8 @@ public class Client {
                         int x = Integer.parseInt(shotCoords[0]);
                         int y = Integer.parseInt(shotCoords[1]);
                         int v = Integer.parseInt(shotCoords[2]);
-                        shotGrid.setValue(x,y,v);
-                        shotGrid.printGrid();
+                        shotController.setValue(x,y,v);
+                        shotController.draw();
                         break;
                         //todo: process shot result
                 }
