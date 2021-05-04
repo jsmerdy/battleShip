@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Client implements Runnable {
     ArrayList<Ship> ships = new ArrayList<>();
@@ -15,20 +16,24 @@ public class Client implements Runnable {
     public Socket socket;
     public Grid shipGrid = new Grid();
     public Grid shotGrid = new Grid(-1);
-
     public static final String battleshipName = "Battleship";
     public static final String patrolBoatName = "PatrolBoat";
     public static final String carrierName = "Carrier";
     public static final String destroyerName = "Destroyer";
     public static final String submarineName = "Submarine";
+    private final Random randomGenerator = new Random();
 
     enum States {
         ships,
         shots,
+        waiting,
         result,
     }
 
     public States clientState;
+
+    public int shotsTaken = 0;
+    public boolean thatGuy = false;
 
     @Override
     public void run() {
@@ -57,9 +62,6 @@ public class Client implements Runnable {
                             case battleshipName:
                                 Ship battleship = new Battleship().init(x1,y1,x2,y2);
                                 ships.add(battleship);
-                                if (ships.size() > 5) {
-                                    clientState = States.shots;
-                                }
                                 Command shipConfirm = Commands.create(Commands.shipConfirm, coords);
                                 shipGrid.addShip(battleship);
                                 shipGrid.printGrid();
@@ -70,9 +72,6 @@ public class Client implements Runnable {
                             case patrolBoatName:
                                 Ship patrolBoat = new PatrolBoat().init(x1,y1,x2,y2);
                                 ships.add(patrolBoat);
-                                if (ships.size() == 5) {
-                                    clientState = States.shots;
-                                }
                                 shipConfirm = Commands.create(Commands.shipConfirm, coords);
                                 shipGrid.addShip(patrolBoat);
                                 shipGrid.printGrid();
@@ -83,9 +82,6 @@ public class Client implements Runnable {
                             case carrierName:
                                 Ship carrier = new Carrier().init(x1,y1,x2,y2);
                                 ships.add(carrier);
-                                if (ships.size() == 5) {
-                                    clientState = States.shots;
-                                }
                                 shipConfirm = Commands.create(Commands.shipConfirm, coords);
                                 shipGrid.addShip(carrier);
                                 shipGrid.printGrid();
@@ -95,9 +91,6 @@ public class Client implements Runnable {
                             case submarineName:
                                 Ship submarine = new Submarine().init(x1,y1,x2,y2);
                                 ships.add(submarine);
-                                if (ships.size() == 5) {
-                                    clientState = States.shots;
-                                }
                                 shipConfirm = Commands.create(Commands.shipConfirm, coords);
                                 shipGrid.addShip(submarine);
                                 shipGrid.printGrid();
@@ -107,9 +100,6 @@ public class Client implements Runnable {
                             case destroyerName:
                                 Ship destroyer = new Destroyer().init(x1,y1,x2,y2);
                                 ships.add(destroyer);
-                                if (ships.size() == 5) {
-                                    clientState = States.shots;
-                                }
                                 shipConfirm = Commands.create(Commands.shipConfirm, coords);
                                 shipGrid.addShip(destroyer);
                                 shipGrid.printGrid();
@@ -118,18 +108,71 @@ public class Client implements Runnable {
                                 break;
 
                         }
+                        if (ships.size() >= 5)
+                        {
+                            if (otherClient()!=null && otherClient().clientState == States.waiting)
+                            {
+                                int turnSelector = randomGenerator.nextInt(2);
+                                if (turnSelector == 0)
+                                {
+                                    otherClient().thatGuy = true;
+                                    thatGuy = false;
+                                    otherClient().clientState = States.shots;
+                                    clientState = States.waiting;
+
+                                }
+                                else
+                                {
+                                    otherClient().clientState = States.waiting;
+                                    clientState = States.shots;
+                                    thatGuy = true;
+                                    otherClient().thatGuy = false;
+                                }
+                            }
+                            else {
+                                clientState = States.waiting;
+                            }
+
+                            if(otherClient() != null) {
+                                otherClient().sendPrompt();
+                            }
+                            sendPrompt();
+                        }
+
                     }
                     break;
 
-                    case Commands.shot: {
+                    case Commands.shot:
+                        {
                         String[] coords = command.parameters;
                         int x = Integer.parseInt(coords[0]);
                         int y = Integer.parseInt(coords[1]);
                         otherClient().shipGrid.printGrid();
                         int value = otherClient().shipGrid.getValue(x,y);
-                        Command shotResult = Commands.create(Commands.shotResult, x, y, value);
+                        Ship ship = null;
+                        if(value == 1)
+                        {
+                            ship = otherClient().shipHit(x,y);
+                        }
+                        Command shotResult = null;
+                        if (ship != null && ship.health == 0)
+                        {
+                            shotResult = Commands.create(Commands.shotResult, x, y, value, ship.getClass().getSimpleName());
+                        }
+                        else
+                        {
+                            shotResult = Commands.create(Commands.shotResult, x, y, value);
+                        }
                         printWriter.println(shotResult.toString());
                         printWriter.flush();
+                        shotsTaken += 1;
+
+                        otherClient().clientState = States.shots;
+                        otherClient().sendPrompt();
+                        clientState = States.waiting;
+                        sendPrompt();
+
+
                     }
                     break;
 
@@ -148,6 +191,18 @@ public class Client implements Runnable {
         }
     }
 
+    private Ship shipHit(int x, int y)
+    {
+        for(Ship ship: ships)
+        {
+            if(ship.thisYou(x,y))
+            {
+                return ship;
+            }
+        }
+        return null;
+    }
+
     public void sendPrompt() {
         String prompt = Commands.state;
         switch(clientState) {
@@ -156,6 +211,9 @@ public class Client implements Runnable {
                 break;
             case shots:
                 prompt += ":shots";
+                break;
+            case waiting:
+                prompt += ":waiting";
                 break;
         }
         printWriter.println(prompt);

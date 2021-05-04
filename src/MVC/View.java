@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class View {
-    JPanel buttonPanel = new JPanel();
+    public JPanel buttonPanel = new JPanel();
     public JPanel containerPanel = new JPanel();
     public ArrayList<JButton> buttonGrid = new ArrayList<>();
     public View()
@@ -37,4 +37,20 @@ public class View {
     }
 
 
+    public void setEnabled(boolean b)
+    {
+        buttonPanel.setEnabled(b);
+        Component[] components = buttonPanel.getComponents();
+        for(Component component : components)
+        {
+            if(component instanceof JButton)
+            {
+                JButton button = (JButton)component;
+                Object used = button.getClientProperty("used");
+                if (used == null) {
+                    component.setEnabled(b);
+                }
+            }
+        }
+    }
 }

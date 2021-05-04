@@ -50,6 +50,16 @@ public class ShotController extends Controller {
         modelGrid.setValue(x,y,v);
     }
 
+    public void turnSwitch()
+    {
+        view.setEnabled(false);
+    }
+
+    public void shots()
+    {
+        view.setEnabled(true);
+    }
+
     class ShotButtonActionListener implements ActionListener {
 
         @Override
@@ -64,8 +74,7 @@ public class ShotController extends Controller {
             socketWriter.flush();
 
             button.setEnabled(false);
+            button.putClientProperty("used", true);
         }
     }
-
-
 }

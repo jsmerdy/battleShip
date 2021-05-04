@@ -28,6 +28,7 @@ public class Client {
     private final Random randomGenerator = new Random();
     private ShotController shotController;
     private ShipController shipController;
+    private String waitingMessage;
 
     public static void main(String[] args) {
 
@@ -174,10 +175,20 @@ public class Client {
                             socketWriter.flush();
                         }
                         if(command.parameters[0].equals("shots")) {
-                            /*
-                            //todo: let user know it's his/her/their turn
-
-                            */
+                            waitingMessage = null;
+                            shotController.shots();
+                            containerFrame.setTitle("Take a shot");
+                        }
+                        if(command.parameters[0].equals("waiting"))
+                        {
+                            shotController.turnSwitch();
+                            if (waitingMessage != null)
+                            {
+                                containerFrame.setTitle(waitingMessage);
+                            }
+                            else {
+                                containerFrame.setTitle("slow down there speed racer");
+                            }
                         }
                         break;
 
@@ -219,6 +230,10 @@ public class Client {
                         int v = Integer.parseInt(shotCoords[2]);
                         shotController.setValue(x,y,v);
                         shotController.draw();
+                        if (shotCoords.length > 3)
+                        {
+                            waitingMessage = "you sunk the "+shotCoords[3];
+                        }
                         break;
                         //todo: process shot result
                 }
