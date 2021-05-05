@@ -164,7 +164,7 @@ public class Client {
                 Command command = Commands.parse(serverMessage);
                 switch(command.operation) {
                     case "state":
-                        if(command.parameters[0].equals("ships")) {
+                        if(command.parameters.get(0).equals("ships")) {
                             /*
                             System.out.println("Enter ship & spawn location: ");
                             String line = bufferedReader.readLine();
@@ -174,12 +174,12 @@ public class Client {
                             socketWriter.println("ship_location:" + shipLocation);
                             socketWriter.flush();
                         }
-                        if(command.parameters[0].equals("shots")) {
+                        if(command.parameters.get(0).equals("shots")) {
                             waitingMessage = null;
                             shotController.shots();
                             containerFrame.setTitle("Take a shot");
                         }
-                        if(command.parameters[0].equals("waiting"))
+                        if(command.parameters.get(0).equals("waiting"))
                         {
                             shotController.turnSwitch();
                             if (waitingMessage != null)
@@ -193,7 +193,7 @@ public class Client {
                         break;
 
                     case Commands.shipConfirm:
-                        String[] coords = command.parameters;
+                        String[] coords = command.parameters.toArray(new String[0]);
                         String shipName = coords[0];
                         int x1 = Integer.parseInt(coords[1]);
                         int y1 = Integer.parseInt(coords[2]);
@@ -224,7 +224,7 @@ public class Client {
                         }
                         break;
                     case Commands.shotResult:
-                        String[] shotCoords = command.parameters;
+                        String[] shotCoords = command.parameters.toArray(new String[0]);
                         int x = Integer.parseInt(shotCoords[0]);
                         int y = Integer.parseInt(shotCoords[1]);
                         int v = Integer.parseInt(shotCoords[2]);
@@ -232,10 +232,26 @@ public class Client {
                         shotController.draw();
                         if (shotCoords.length > 3)
                         {
-                            waitingMessage = "you sunk the "+shotCoords[3];
+                            waitingMessage = "You sunk the "+shotCoords[3];
+                        }
+                        if (shotCoords.length > 4)
+                        {
+                            waitingMessage = "You done did the thing";
                         }
                         break;
-                        //todo: process shot result
+                    case Commands.shotReflection:
+                        shotCoords = command.parameters.toArray(new String[0]);
+                        x = Integer.parseInt(shotCoords[0]);
+                        y = Integer.parseInt(shotCoords[1]);
+                        v = Integer.parseInt(shotCoords[2]);
+                        shipController.setValue(x,y,v);
+                        shipController.draw();
+                        if (shotCoords.length > 4)
+                        {
+                            waitingMessage = "You got your ship rocked";
+                        }
+                        break;
+
                 }
             }
 

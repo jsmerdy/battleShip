@@ -9,6 +9,7 @@ public class Commands
     public static final String shipConfirm = "ship_confirm";
     public static final String shot = "shot";
     public static final String shotResult = "shot_result";
+    public static final String shotReflection = "shot_reflection";
     public static final String state = "state";
 
     public static Command parse(String line) {
@@ -16,14 +17,14 @@ public class Commands
         String[] inputArray = line.split(":");
         Command command = new Command();
         command.operation = inputArray[0];
-        command.parameters = inputArray[1].split(",");
+        command.parameters = Arrays.asList(inputArray[1].split(","));
         return command;
     }
     public static Command create(String operation, String[] parameters, int value)
     {
         Command command = new Command();
         command.operation = operation;
-        command.parameters = parameters;
+        command.parameters = Arrays.asList(parameters);
         return command;
     }
 
@@ -35,7 +36,20 @@ public class Commands
         {
             paramList.add(o.toString());
         }
-        command.parameters = paramList.toArray(new String[0]);
+        command.parameters = paramList;
         return command;
     }
+
+    public static Command create(String operation, ArrayList<Object> parameters) {
+        Command command = new Command();
+        command.operation = operation;
+        ArrayList<String> paramList = new ArrayList<>();
+        for(Object o:parameters)
+        {
+            paramList.add(o.toString());
+        }
+        command.parameters = paramList;
+        return command;
+    }
+
 }

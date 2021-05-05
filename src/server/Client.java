@@ -27,7 +27,6 @@ public class Client implements Runnable {
         ships,
         shots,
         waiting,
-        result,
     }
 
     public States clientState;
@@ -52,7 +51,7 @@ public class Client implements Runnable {
                 Command command = Commands.parse(line);
                 switch(command.operation) {
                     case Commands.shipLocation: {
-                        String[] coords = command.parameters;
+                        String[] coords = command.parameters.toArray(new String[0]);
                         String shipName = coords[0];
                         int x1 = Integer.parseInt(coords[1]);
                         int y1 = Integer.parseInt(coords[2]);
@@ -65,8 +64,7 @@ public class Client implements Runnable {
                                 Command shipConfirm = Commands.create(Commands.shipConfirm, coords);
                                 shipGrid.addShip(battleship);
                                 shipGrid.printGrid();
-                                printWriter.println(shipConfirm.toString());
-                                printWriter.flush();
+                                sendCommand(shipConfirm.toString());
                                 break;
 
                             case patrolBoatName:
@@ -75,8 +73,7 @@ public class Client implements Runnable {
                                 shipConfirm = Commands.create(Commands.shipConfirm, coords);
                                 shipGrid.addShip(patrolBoat);
                                 shipGrid.printGrid();
-                                printWriter.println(shipConfirm.toString());
-                                printWriter.flush();
+                                sendCommand(shipConfirm.toString());
                                 break;
 
                             case carrierName:
@@ -85,8 +82,7 @@ public class Client implements Runnable {
                                 shipConfirm = Commands.create(Commands.shipConfirm, coords);
                                 shipGrid.addShip(carrier);
                                 shipGrid.printGrid();
-                                printWriter.println(shipConfirm.toString());
-                                printWriter.flush();
+                                sendCommand(shipConfirm.toString());
                                 break;
                             case submarineName:
                                 Ship submarine = new Submarine().init(x1,y1,x2,y2);
@@ -94,8 +90,7 @@ public class Client implements Runnable {
                                 shipConfirm = Commands.create(Commands.shipConfirm, coords);
                                 shipGrid.addShip(submarine);
                                 shipGrid.printGrid();
-                                printWriter.println(shipConfirm.toString());
-                                printWriter.flush();
+                                sendCommand(shipConfirm.toString());
                                 break;
                             case destroyerName:
                                 Ship destroyer = new Destroyer().init(x1,y1,x2,y2);
@@ -103,12 +98,11 @@ public class Client implements Runnable {
                                 shipConfirm = Commands.create(Commands.shipConfirm, coords);
                                 shipGrid.addShip(destroyer);
                                 shipGrid.printGrid();
-                                printWriter.println(shipConfirm.toString());
-                                printWriter.flush();
+                                sendCommand(shipConfirm.toString());
                                 break;
 
                         }
-                        if (ships.size() >= 5)
+                        if (ships.size() >= 2)
                         {
                             if (otherClient()!=null && otherClient().clientState == States.waiting)
                             {
@@ -144,7 +138,7 @@ public class Client implements Runnable {
 
                     case Commands.shot:
                         {
-                        String[] coords = command.parameters;
+                        String[] coords = command.parameters.toArray(new String[0]);
                         int x = Integer.parseInt(coords[0]);
                         int y = Integer.parseInt(coords[1]);
                         otherClient().shipGrid.printGrid();
@@ -154,22 +148,31 @@ public class Client implements Runnable {
                         {
                             ship = otherClient().shipHit(x,y);
                         }
-                        Command shotResult = null;
-                        if (ship != null && ship.health == 0)
+                        Command shotResult = Commands.create(Commands.shotResult, x, y, value);
+
+                        if(ship != null && ship.health == 0)
                         {
-                            shotResult = Commands.create(Commands.shotResult, x, y, value, ship.getClass().getSimpleName());
+                            shotResult.parameters.add(ship.getClass().getSimpleName());
+                            otherClient().ships.remove(ship);
+                            if(otherClient().ships.isEmpty())
+                            {
+                                shotResult.parameters.add("winner is you");
+                            }
+                        }
+                        sendCommand(shotResult.toString());
+                        shotsTaken += 1;
+
+                        Command shotReflection = Commands.create(Commands.shotReflection,shotResult.parameters);
+
+                        if(otherClient().ships.isEmpty()) {
+                            otherClient().clientState = States.waiting;
                         }
                         else
                         {
-                            shotResult = Commands.create(Commands.shotResult, x, y, value);
+                            otherClient().clientState = States.shots;
                         }
-                        printWriter.println(shotResult.toString());
-                        printWriter.flush();
-                        shotsTaken += 1;
-
-                        otherClient().clientState = States.shots;
-                        otherClient().sendPrompt();
                         clientState = States.waiting;
+                        otherClient().sendPrompt();
                         sendPrompt();
 
 
@@ -189,6 +192,11 @@ public class Client implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendCommand(String s) {
+        printWriter.println(s);
+        printWriter.flush();
     }
 
     private Ship shipHit(int x, int y)
@@ -216,8 +224,7 @@ public class Client implements Runnable {
                 prompt += ":waiting";
                 break;
         }
-        printWriter.println(prompt);
-        printWriter.flush();
+        sendCommand(prompt);
     }
 
     private Client otherClient() {

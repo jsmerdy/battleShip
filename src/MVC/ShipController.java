@@ -30,9 +30,13 @@ public class ShipController extends Controller{
             System.out.println();
         }
     }
-
     public void addShip(Ship ship)
     {
         modelGrid.addShip(ship);
+    }
+
+    public void setValue(int x, int y, int v)
+    {
+        modelGrid.setValue(x,y,v);
     }
 }
