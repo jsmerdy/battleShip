@@ -13,7 +13,6 @@ public class View {
     public ArrayList<JButton> buttonGrid = new ArrayList<>();
     public View()
     {
-        //frame.setSize(400,400);
         buttonPanel.setLayout(new GridLayout(8,8));
 
         for (int i = 0; i < 64; i++) {

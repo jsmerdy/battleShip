@@ -16,16 +16,17 @@ public class ShipController extends Controller{
         for(int y = 0; y < Grid.size; y++) {
             for(int x = 0; x < Grid.size; x++)
             {
-                if(modelGrid.getValue(x,y) == 1)
+                int value = modelGrid.getValue(x,y);
+                if((value & 1) == 1)
                 {
-                    view.buttonGrid.get(y* Grid.size + x).setBackground(Color.GRAY);
+                    view.buttonGrid.get(y* Grid.size + x).setBackground( (value & 2) == 2 ? Color.RED : Color.LIGHT_GRAY);
                     view.buttonGrid.get(y* Grid.size + x).setOpaque(true);
                     view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.YELLOW));
 
                 }
                 else
                 {
-                    view.buttonGrid.get(y* Grid.size + x).setBackground(Color.WHITE);
+                    view.buttonGrid.get(y* Grid.size + x).setBackground((value & 2) == 2 ? Color.WHITE : new Color(0,0,100));
                     view.buttonGrid.get(y* Grid.size + x).setOpaque(true);
                     view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.YELLOW));
 
@@ -39,9 +40,9 @@ public class ShipController extends Controller{
     {
         modelGrid.addShip(ship);
     }
-
-    public void setValue(int x, int y, int v)
-    {
+    public void setKnown(int x, int y) {
+        int v = modelGrid.getValue(x,y);
+        v |= 2;
         modelGrid.setValue(x,y,v);
     }
 }

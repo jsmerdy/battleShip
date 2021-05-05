@@ -31,9 +31,6 @@ public class Client implements Runnable {
 
     public States clientState;
 
-    public int shotsTaken = 0;
-    public boolean thatGuy = false;
-
     @Override
     public void run() {
         String line;
@@ -42,7 +39,6 @@ public class Client implements Runnable {
         clientState = States.ships;
         while(true) {
             try {
-                //todo: switch on client state
                 sendPrompt();
                 line = bufferedReader.readLine();
                 if(line == null) { break; }
@@ -102,15 +98,13 @@ public class Client implements Runnable {
                                 break;
 
                         }
-                        if (ships.size() >= 2)
+                        if (ships.size() >= 5)
                         {
                             if (otherClient()!=null && otherClient().clientState == States.waiting)
                             {
                                 int turnSelector = randomGenerator.nextInt(2);
                                 if (turnSelector == 0)
                                 {
-                                    otherClient().thatGuy = true;
-                                    thatGuy = false;
                                     otherClient().clientState = States.shots;
                                     clientState = States.waiting;
 
@@ -119,8 +113,6 @@ public class Client implements Runnable {
                                 {
                                     otherClient().clientState = States.waiting;
                                     clientState = States.shots;
-                                    thatGuy = true;
-                                    otherClient().thatGuy = false;
                                 }
                             }
                             else {
@@ -160,9 +152,14 @@ public class Client implements Runnable {
                             }
                         }
                         sendCommand(shotResult.toString());
-                        shotsTaken += 1;
 
-                        Command shotReflection = Commands.create(Commands.shotReflection,shotResult.parameters);
+                        Command shotReflection = Commands.create(Commands.shotReflection,x,y);
+                        if(otherClient().ships.isEmpty())
+                        {
+                            shotReflection.parameters.add("winner is not you");
+                        }
+
+                        otherClient().sendCommand(shotReflection.toString());
 
                         if(otherClient().ships.isEmpty()) {
                             otherClient().clientState = States.waiting;
@@ -174,8 +171,6 @@ public class Client implements Runnable {
                         clientState = States.waiting;
                         otherClient().sendPrompt();
                         sendPrompt();
-
-
                     }
                     break;
 
@@ -183,6 +178,7 @@ public class Client implements Runnable {
             } catch (Exception e) {
                 printWriter.println(-1);
                 e.printStackTrace();
+                break;
             } finally {
                 printWriter.flush();
             }

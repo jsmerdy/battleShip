@@ -45,15 +45,12 @@ public class Ship {
 
     public boolean thisYou(int x, int y)
     {
-        System.out.printf("This you %d %d (%d,%d) (%d,%d)\n",x,y,x1,y1,x2,y2);
         if ((x >= x1 && x <= x2) && (y >= y1 && y <= y2))
         {
-            System.out.printf("line 51\n");
             health--;
             return true;
         }
 
-        System.out.printf("line 56\n");
         return false;
     }
 }

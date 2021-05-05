@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,19 +30,34 @@ public class Client {
     private ShotController shotController;
     private ShipController shipController;
     private String waitingMessage;
+    private final String serverAddress;
 
     public static void main(String[] args) {
 
-        Client client = new Client();
+        String address = getServerAddress();
+
+        Client client = new Client(address);
         client.go();
 
         System.out.println("Client closing");
         return;
     }
 
-    public Client()
-    {
+    private static String getServerAddress() {
+        String address = (String)JOptionPane.showInputDialog(
+                null,
+                "Server Address",
+                "Server Picker",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                null,
+                "127.0.0.1");
+        return address;
+    }
 
+    public Client(String address)
+    {
+        serverAddress = address;
     }
 
     private void generateShipList() {
@@ -128,8 +144,8 @@ public class Client {
         generateShipList();
 
         try {
-            System.out.println("client> connecting to 127.0.0.1:5000...");
-            socket = new Socket("127.0.0.1", 5000);
+            System.out.printf("client> connecting to %s:5000...",serverAddress);
+            socket = new Socket(InetAddress.getByName(serverAddress), 5000);
             System.out.println("client> success!");
 
             socketWriter = new PrintWriter(socket.getOutputStream());
@@ -140,11 +156,12 @@ public class Client {
 
         Grid shipGrid = new Grid();
         Grid shotGrid = new Grid(-1);
-        View shipView = new ShipView();
-        View shotView = new ShotView();
+        View shipView = new View();
+        View shotView = new View();
         JFrame containerFrame = new JFrame();
         containerFrame.setSize(400,800);
         containerFrame.setLayout(new GridLayout(2,1));
+        containerFrame.setResizable(false);
         containerFrame.add(shipView.containerPanel);
         containerFrame.add(shotView.containerPanel);
         containerFrame.pack();
@@ -243,10 +260,9 @@ public class Client {
                         shotCoords = command.parameters.toArray(new String[0]);
                         x = Integer.parseInt(shotCoords[0]);
                         y = Integer.parseInt(shotCoords[1]);
-                        v = Integer.parseInt(shotCoords[2]);
-                        shipController.setValue(x,y,v);
+                        shipController.setKnown(x,y);
                         shipController.draw();
-                        if (shotCoords.length > 4)
+                        if (shotCoords.length > 2)
                         {
                             waitingMessage = "You got your ship rocked";
                         }
