@@ -3,6 +3,7 @@ package MVC;
 import common.Grid;
 import common.Ship;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class ShipController extends Controller{
@@ -19,11 +20,15 @@ public class ShipController extends Controller{
                 {
                     view.buttonGrid.get(y* Grid.size + x).setBackground(Color.GRAY);
                     view.buttonGrid.get(y* Grid.size + x).setOpaque(true);
+                    view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+
                 }
                 else
                 {
                     view.buttonGrid.get(y* Grid.size + x).setBackground(Color.WHITE);
                     view.buttonGrid.get(y* Grid.size + x).setOpaque(true);
+                    view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+
                 }
 
             }
