@@ -19,16 +19,16 @@ public class ShipController extends Controller{
                 int value = modelGrid.getValue(x,y);
                 if((value & 1) == 1)
                 {
-                    view.buttonGrid.get(y* Grid.size + x).setBackground( (value & 2) == 2 ? Color.RED : Color.LIGHT_GRAY);
+                    view.buttonGrid.get(y* Grid.size + x).setBackground( (value & 2) == 2 ? Color.BLACK : Color.LIGHT_GRAY);
                     view.buttonGrid.get(y* Grid.size + x).setOpaque(true);
-                    view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+                    view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
                 }
                 else
                 {
                     view.buttonGrid.get(y* Grid.size + x).setBackground((value & 2) == 2 ? Color.WHITE : new Color(0,0,100));
                     view.buttonGrid.get(y* Grid.size + x).setOpaque(true);
-                    view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+                    view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
                 }
 

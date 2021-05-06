@@ -6,6 +6,8 @@ import MVC.ShotController;
 import MVC.View;
 import common.*;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
@@ -14,6 +16,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
@@ -246,6 +249,21 @@ public class Client {
                         int y = Integer.parseInt(shotCoords[1]);
                         int v = Integer.parseInt(shotCoords[2]);
                         shotController.setValue(x,y,v);
+
+                        URL url = getClass().getResource( v == 1 ? "/sounds/boom.wav" : "/sounds/splash.wav");
+                        try
+                        {
+                            AudioInputStream soundStream = AudioSystem.getAudioInputStream(url);
+                            var shotSound = AudioSystem.getClip();
+                            shotSound.open(soundStream);
+                            shotSound.start();
+
+                        }
+                        catch(Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+
                         shotController.draw();
                         if (shotCoords.length > 3)
                         {

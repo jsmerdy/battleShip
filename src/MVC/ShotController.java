@@ -29,21 +29,21 @@ public class ShotController extends Controller {
                 {
                     button.setBackground(Color.RED);
                     view.buttonGrid.get(y* Grid.size + x).setOpaque(true);
-                    view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+                    view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
                 }
                 else if (value == 0)
                 {
                     button.setBackground(Color.WHITE);
                     view.buttonGrid.get(y* Grid.size + x).setOpaque(true);
-                    view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+                    view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
                 }
                 else
                 {
                     button.setBackground(Color.DARK_GRAY);
                     view.buttonGrid.get(y* Grid.size + x).setOpaque(true);
-                    view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+                    view.buttonGrid.get(y* Grid.size + x).setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
                 }
             }
