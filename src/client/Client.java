@@ -264,7 +264,7 @@ public class Client {
                         shipController.draw();
                         if (shotCoords.length > 2)
                         {
-                            waitingMessage = "You got your ship rocked";
+                            waitingMessage = "You got your ship wrecked";
                         }
                         break;
 
