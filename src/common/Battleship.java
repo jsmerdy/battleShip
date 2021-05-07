@@ -1,7 +1,5 @@
 package common;
 
-import common.Ship;
-
 public class Battleship extends Ship {
     public Battleship()
     {

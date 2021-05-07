@@ -1,7 +1,5 @@
 package common;
 
-import java.util.Arrays;
-
 public class Grid {
     public static int size = 8;
     public int[][] grid;

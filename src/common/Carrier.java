@@ -1,6 +1,5 @@
 package common;
 
-import common.Ship;
 
 public class Carrier extends Ship {
     public Carrier() {

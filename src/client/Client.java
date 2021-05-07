@@ -1,6 +1,5 @@
 package client;
 
-import MVC.Controller;
 import MVC.ShipController;
 import MVC.ShotController;
 import MVC.View;
@@ -20,6 +19,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
+
 
 import static server.Client.*;
 
@@ -168,7 +171,26 @@ public class Client {
         containerFrame.add(shipView.containerPanel);
         containerFrame.add(shotView.containerPanel);
         containerFrame.pack();
+        containerFrame.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) { }
+            @Override
+            public void windowClosing(WindowEvent e) { System.exit(0); }
+            @Override
+            public void windowClosed(WindowEvent e) { }
+            @Override
+            public void windowIconified(WindowEvent e) { }
+            @Override
+            public void windowDeiconified(WindowEvent e) { }
+            @Override
+            public void windowActivated(WindowEvent e) { }
+            @Override
+            public void windowDeactivated(WindowEvent e) { }
+
+        });
+
         containerFrame.setVisible(true);
+
 
         shotController = new ShotController(shotGrid, shotView, socketWriter);
         shipController = new ShipController(shipGrid,shipView);
@@ -185,10 +207,7 @@ public class Client {
                 switch(command.operation) {
                     case "state":
                         if(command.parameters.get(0).equals("ships")) {
-                            /*
-                            System.out.println("Enter ship & spawn location: ");
-                            String line = bufferedReader.readLine();
-                             */
+
                             Ship ship = shipList.removeFirst();
                             String shipLocation = String.format("%s,%d,%d,%d,%d", ship.getClass().getSimpleName(), ship.x1,ship.y1,ship.x2,ship.y2);
                             socketWriter.println("ship_location:" + shipLocation);

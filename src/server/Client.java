@@ -135,6 +135,7 @@ public class Client implements Runnable {
                         int y = Integer.parseInt(coords[1]);
                         otherClient().shipGrid.printGrid();
                         int value = otherClient().shipGrid.getValue(x,y);
+                        shotGrid.setValue(x,y,value | 2);
                         Ship ship = null;
                         if(value == 1)
                         {
@@ -188,6 +189,7 @@ public class Client implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        removeClient();
     }
 
     public void sendCommand(String s) {
@@ -231,4 +233,13 @@ public class Client implements Runnable {
             return Server.playerA;
         }
     }
+    private void removeClient() {
+        if (this == Server.playerA) {
+            Server.playerA = null;
+        }
+        else {
+            Server.playerB = null;
+        }
+    }
+
 }

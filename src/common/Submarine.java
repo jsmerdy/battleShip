@@ -1,7 +1,5 @@
 package common;
 
-import common.Ship;
-
 public class Submarine extends Ship {
     public Submarine() {
         super();

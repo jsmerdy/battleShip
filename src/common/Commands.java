@@ -20,14 +20,6 @@ public class Commands
         command.parameters = Arrays.asList(inputArray[1].split(","));
         return command;
     }
-    public static Command create(String operation, String[] parameters, int value)
-    {
-        Command command = new Command();
-        command.operation = operation;
-        command.parameters = Arrays.asList(parameters);
-        return command;
-    }
-
     public static Command create(String operation, Object ...parameters) {
         Command command = new Command();
         command.operation = operation;
@@ -39,17 +31,4 @@ public class Commands
         command.parameters = paramList;
         return command;
     }
-
-    public static Command create(String operation, ArrayList<Object> parameters) {
-        Command command = new Command();
-        command.operation = operation;
-        ArrayList<String> paramList = new ArrayList<>();
-        for(Object o:parameters)
-        {
-            paramList.add(o.toString());
-        }
-        command.parameters = paramList;
-        return command;
-    }
-
 }
